@@ -69,26 +69,42 @@ class BinarySearchTree {
         return this.#findBelow(this.#root, data)
     }
 
-    remove(/* data */) {
-        throw new NotImplementedError('Not implemented');
-        // remove line with error and write your code here
+    remove(data) {
+        this.#root = removing(this.#root, data)
+
+        function removing(node, data) {
+            if (!node) return null
+            if (node.data < data) {
+                node.right = removing(node.right, data)
+                return node
+            } else if (node.data > data) {
+                node.left = removing(node.left, data)
+                return node
+            } else {
+                if (node.right === null && node.left === null) return null
+                if (node.left === null) return node.right
+                else if (node.right === null) return node.left
+
+                let maxFromLeft = node.left;
+                while (maxFromLeft.right) maxFromLeft = maxFromLeft.right
+                node.data = maxFromLeft.data;
+                node.left = removing(node.left, maxFromLeft.data);
+                return node;
+            }
+
+
+        }
     }
 
-    min() {
-        throw new NotImplementedError('Not implemented');
-        // remove line with error and write your code here
+    min(node = this.#root) {
+        return node.left ? this.min(node.left) : node.data
     }
 
-    max() {
-        throw new NotImplementedError('Not implemented');
-        // remove line with error and write your code here
+    max(node = this.#root) {
+        return node.right ? this.max(node.right) : node.data
     }
 }
 
-// const tree = new BinarySearchTree();
-// tree.add(1);
-// tree.add(2);
-// console.log(tree.has(2))
 
 module.exports = {
     BinarySearchTree
